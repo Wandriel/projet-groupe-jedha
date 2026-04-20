@@ -1,6 +1,7 @@
 import pandas as pd
 from s3_utils import read_s3_csv, upload_to_s3, get_s3_client
-import cleaning_functions_v2 as cf
+import cleaning_functions as cf
+from vacances_api import fetch_vacances_data
 
 # ══════════════════════════════════════════════════════════════════════════════
 # main.py — Version corrigée et synchronisée avec cleaning_functions_v2.py
@@ -84,6 +85,23 @@ def main():
     s3 = get_s3_client()
     all_files = get_all_files(s3, BUCKET, 'bronze/')
     print(f"📂 {len(all_files)} fichiers CSV trouvés dans bronze/")
+
+    # ── ÉTAPE 0 : PIPELINE VACANCES (API -> SILVER) ─────────────────────────
+    print("\n🌟 LANCEMENT DU PIPELINE RÉFÉRENTIEL VACANCES...")
+    try:
+        # 1. On récupère les données via l'API (ton nouveau script)
+        df_vacances_raw = fetch_vacances_data()
+        
+        if df_vacances_raw is not None:
+            # 2. On nettoie et on "déplie" le calendrier (ta nouvelle fonction)
+            df_vacances_clean = cf.clean_vacances(df_vacances_raw)
+            
+            # 3. On envoie le résultat sur S3 dans le dossier Silver
+            upload_to_s3(df_vacances_clean, "referentiel_vacances.csv", folder="silver")
+            print(f"✅ Référentiel vacances mis à jour : {len(df_vacances_clean):,} lignes.")
+    except Exception as e:
+        # Si l'API plante, on affiche l'erreur mais on ne bloque pas le reste du pipeline
+        print(f"⚠️  Échec du pipeline vacances : {e} (Suite du pipeline...)")
 
     # ── ÉTAPE 1 : SILVER — nettoyage des 4 tables ───────────────────────────
     df_usagers  = process_and_upload_silver(all_files, 'usagers',   cf.clean_usagers,          "usagers_cleaned")
