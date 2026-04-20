@@ -261,3 +261,76 @@ def clean_vehicules(df, annee):
     df = df[[c for c in cols_to_keep if c in df.columns]].copy()
 
     return df
+
+def clean_vacances(df):
+    """
+    Nettoyage et expansion du calendrier scolaire.
+    Transforme les plages [start, end] en lignes journalières par département.
+    """
+    
+    # --- AJOUT SÉCURITÉ : Renommage si l'API change les noms ---
+    # On s'assure que les colonnes ont les noms attendus par la suite du code
+    rename_map = {
+        'start_date': 'start_date', 
+        'end_date': 'end_date',
+        'location': 'location',
+        'zones': 'zones',
+        'description': 'description'
+    }
+    # On ne renomme que si la colonne existe (pour éviter de planter)
+    df = df.rename(columns={k: v for k, v in rename_map.items() if k in df.columns})
+
+    # 1. Conversion des dates
+    df = df.copy()
+    df['start_date'] = pd.to_datetime(df['start_date'], errors='coerce')
+    df['end_date'] = pd.to_datetime(df['end_date'], errors='coerce')
+
+    # On supprime les lignes sans dates valides (évite que explode plante)
+    df = df.dropna(subset=['start_date', 'end_date'])
+
+    # 2. Expansion (Explode) : On crée une ligne pour CHAQUE jour entre début et fin
+    def generate_dates(row):
+        return pd.date_range(start=row['start_date'], end=row['end_date']).tolist()
+
+    df['date'] = df.apply(generate_dates, axis=1)
+    df_unfolded = df.explode('date')
+
+    # 3. Mapping des Départements (Le dictionnaire de ton ami)
+    mapping_dept = {
+        'Bordeaux': 'Gironde', 'Lyon': 'Rhône', 'Paris': 'Paris',
+        'Saint Pierre et Miquelon': 'Saint-Pierre-et-Miquelon',
+        'Versailles': 'Yvelines', 'Créteil': 'Val-de-Marne',
+        'Aix-Marseille': 'Bouches-du-Rhône', 'Nice': 'Alpes-Maritimes',
+        'Nantes': 'Loire-Atlantique', 'Rennes': 'Ille-et-Vilaine',
+        'Lille': 'Nord', 'Montpellier': 'Hérault',
+        'Toulouse': 'Haute-Garonne', 'Strasbourg': 'Bas-Rhin',
+        'Nancy-Metz': 'Moselle', 'Reims': 'Marne',
+        'Amiens': 'Somme', 'Rouen': 'Seine-Maritime',
+        'Caen': 'Calvados', 'Orléans-Tours': 'Loiret',
+        'Poitiers': 'Vienne', 'Limoges': 'Haute-Vienne',
+        'Clermont-Ferrand': 'Puy-de-Dôme', 'Dijon': "Côte-d'Or",
+        'Besançon': 'Doubs', 'Grenoble': 'Isère',
+        'Corse': 'Corse-du-Sud', 'Guadeloupe': 'Guadeloupe',
+        'Martinique': 'Martinique', 'Guyane': 'Guyane',
+        'La Réunion': 'La Réunion', 'Mayotte': 'Mayotte',
+        'Wallis et Futuna': 'Wallis-et-Futuna',
+        'Polynésie Française': 'Polynésie-Française',
+        'Nouvelle Calédonie': 'Nouvelle-Calédonie',
+        'Normandie': 'Normandie', 'polynésie': 'Polynésie française',
+        'Réunion': 'Île de la Réunion'
+    }
+
+    # Sécurité : Si 'location' manque, on crée la colonne vide pour ne pas faire planter le .map()
+    if 'location' not in df_unfolded.columns:
+        df_unfolded['location'] = "Inconnu"
+
+    df_unfolded['Departement'] = df_unfolded['location'].map(mapping_dept).fillna('Inconnu')
+
+    # 4. Formatage final de la date pour le CSV (YYYY/MM/DD)
+    df_unfolded['date'] = pd.to_datetime(df_unfolded['date']).dt.strftime('%Y/%m/%d')
+
+    # 5. Sélection des colonnes finales
+    cols_to_keep = ['date', 'description', 'zones', 'location', 'Departement']
+    df_final = df_unfolded[[c for c in cols_to_keep if c in df_unfolded.columns]].copy()
+
+    return df_final
