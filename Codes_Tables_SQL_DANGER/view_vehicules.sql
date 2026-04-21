@@ -7,7 +7,7 @@
     annee_source,
         CASE
             WHEN categorie_vehicule = ANY (ARRAY['1'::double precision, '50'::double precision, '60'::double precision, '80'::double precision]) THEN 'Mobilité douce (Vélos, EDP)'::text
-            WHEN categorie_vehicule = ANY (ARRAY['2'::double precision, '30'::double precision, '31'::double precision, '32'::double precision, '33'::double precision, '34'::double precision, '41'::double precision, '42'::double precision, '43'::double precision]) THEN '2RM et 3RM'::text
+            WHEN categorie_vehicule = ANY (ARRAY['2'::double precision, '30'::double precision, '31'::double precision, '32'::double precision, '33'::double precision, '34'::double precision, '41'::double precision, '42'::double precision, '43'::double precision]) THEN 'Motos'::text
             WHEN categorie_vehicule = ANY (ARRAY['3'::double precision, '7'::double precision]) THEN 'Véhicules Légers (VL)'::text
             WHEN categorie_vehicule = '10'::double precision THEN 'Véhicules Utilitaires (VU)'::text
             WHEN categorie_vehicule = ANY (ARRAY['13'::double precision, '14'::double precision, '15'::double precision, '16'::double precision, '17'::double precision]) THEN 'Poids Lourds (PL)'::text
