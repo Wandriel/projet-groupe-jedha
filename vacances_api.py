@@ -10,7 +10,7 @@ def fetch_vacances_data():
     
     # 1. PRÉPARATION DE LA MISSION
     # Liste des années cibles pour couvrir tout l'historique du projet
-    annees_a_recuperer = ["2019-2020", "2020-2021", "2021-2022", "2022-2023", "2023-2024", "2024-2025"]
+    annees_a_recuperer = ["2020-2021", "2021-2022", "2022-2023", "2023-2024", "2024-2025"]
     
     # Boîte vide qui va accumuler toutes les lignes de données récupérées
     all_results = []
