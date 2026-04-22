@@ -66,6 +66,3 @@ CREATE OR REPLACE VIEW public.view_caract
    FROM fact_caracteristiques r
      LEFT JOIN ref_departements t ON t.code::text = lpad(r.departement, 2, '0'::text);
 
-ALTER TABLE public.view_caract
-    OWNER TO admin_users;
-

@@ -123,6 +123,3 @@ CREATE OR REPLACE VIEW public.view_usager
    FROM dim_usagers r
      LEFT JOIN fact_caracteristiques f ON r."Num_Acc" = f."Num_Acc";
 
-ALTER TABLE public.view_usager
-    OWNER TO admin_users;
-

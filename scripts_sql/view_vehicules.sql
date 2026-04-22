@@ -69,6 +69,3 @@ CREATE OR REPLACE VIEW public.view_vehicules
         END AS motorisation_label
    FROM dim_vehicules r;
 
-ALTER TABLE public.view_vehicules
-    OWNER TO admin_users;
-

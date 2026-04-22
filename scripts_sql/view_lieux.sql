@@ -49,6 +49,3 @@ CREATE OR REPLACE VIEW public.view_lieux
         END AS infrastucture_label
    FROM fact_lieux;
 
-ALTER TABLE public.view_lieux
-    OWNER TO admin_users;
-
