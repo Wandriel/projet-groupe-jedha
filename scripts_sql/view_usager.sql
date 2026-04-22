@@ -17,7 +17,7 @@ CREATE OR REPLACE VIEW public.view_usager
     r.equipement_secu3,
     r.localisation_pieton,
     r.action_pieton,
-    r.annee,
+    f.annee,
         CASE r.categorie_usager
             WHEN 1 THEN 'Conducteur'::text
             WHEN 2 THEN 'Passager'::text
@@ -111,13 +111,13 @@ CREATE OR REPLACE VIEW public.view_usager
             WHEN 'B'::text THEN 'Autre'::text
             ELSE 'Non renseigné'::text
         END AS action_pieton_label,
-    (r.annee::double precision - r.annee_naissance)::integer AS age_victime_jour,
+    (f.annee::double precision - r.annee_naissance)::integer AS age_victime_jour,
         CASE
-            WHEN (r.annee::double precision - r.annee_naissance) < 18::double precision THEN 'Moins de 18 ans'::text
-            WHEN (r.annee::double precision - r.annee_naissance) >= 18::double precision AND (r.annee::double precision - r.annee_naissance) <= 25::double precision THEN '18-25 ans'::text
-            WHEN (r.annee::double precision - r.annee_naissance) >= 26::double precision AND (r.annee::double precision - r.annee_naissance) <= 45::double precision THEN '26-45 ans'::text
-            WHEN (r.annee::double precision - r.annee_naissance) >= 46::double precision AND (r.annee::double precision - r.annee_naissance) <= 64::double precision THEN '46-64 ans'::text
-            WHEN (r.annee::double precision - r.annee_naissance) >= 65::double precision THEN '65 ans et +'::text
+            WHEN (f.annee::double precision - f.annee_naissance) < 18::double precision THEN 'Moins de 18 ans'::text
+            WHEN (f.annee::double precision - f.annee_naissance) >= 18::double precision AND (f.annee::double precision - r.annee_naissance) <= 25::double precision THEN '18-25 ans'::text
+            WHEN (f.annee::double precision - f.annee_naissance) >= 26::double precision AND (f.annee::double precision - r.annee_naissance) <= 45::double precision THEN '26-45 ans'::text
+            WHEN (f.annee::double precision - f.annee_naissance) >= 46::double precision AND (f.annee::double precision - r.annee_naissance) <= 64::double precision THEN '46-64 ans'::text
+            WHEN (f.annee::double precision - f.annee_naissance) >= 65::double precision THEN '65 ans et +'::text
             ELSE NULL::text
         END AS tranche_age
    FROM dim_usagers r
