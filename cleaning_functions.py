@@ -184,6 +184,10 @@ def clean_lieux(df, annee):
     if 'vma' in df.columns:
         df['vma'] = pd.to_numeric(df['vma'], errors='coerce')
 
+        # --- AJOUT : Filtrage des vitesses aberrantes (> 130 km/h) ---
+        # On ne garde que les lignes où vma est <= 130 ou est NaN (pour ne pas perdre de données valides)
+        df = df[(df['vma'] <= 130) | (df['vma'].isna())]        
+
     # 7. Renommage aligné sur les notebooks
     rename_map = {
         'catr':  'categorie_route',

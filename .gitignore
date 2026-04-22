@@ -1,2 +1,7 @@
 .env
 TEST.ipynb
+__pycache__/
+.git/
+.github/
+*.csv
+.ipynb_checkpoints/

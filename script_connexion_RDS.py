@@ -30,7 +30,7 @@ s3_client = boto3.client(
     region_name=AWS_REGION
 )
 
-connection_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+connection_url = f"postgresql+pg8000://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(connection_url)
 
 # 3. CONFIGURATION DES TABLES
