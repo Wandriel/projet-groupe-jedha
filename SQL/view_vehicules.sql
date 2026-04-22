@@ -68,7 +68,3 @@ CREATE OR REPLACE VIEW public.view_vehicules
             ELSE 'Non renseigné'::text
         END AS motorisation_label
    FROM dim_vehicules r;
-
-ALTER TABLE public.view_vehicules
-    OWNER TO admin_users;
-
