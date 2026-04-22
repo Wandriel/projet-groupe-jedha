@@ -1,0 +1,41 @@
+name: Pipeline Accidents Data Engineering
+
+on:
+  # 1. Déclenchement Manuel (Le bouton "Run workflow" dans GitHub)
+  workflow_dispatch:
+
+  # 2. Déclenchement une fois par an (le 1er janvier à minuit)
+  schedule:
+    - cron: '0 0 1 1 *'
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t accident-pipeline .
+
+      - name: Run Pipeline
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "eu-west-3"
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: "5432"
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: |
+          docker run --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+                     --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+                     --env AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION \
+                     --env DB_USER=$DB_USER \
+                     --env DB_PASSWORD=$DB_PASSWORD \
+                     --env DB_HOST=$DB_HOST \
+                     --env DB_PORT=$DB_PORT \
+                     --env DB_NAME=$DB_NAME \
+                     accident-pipeline
