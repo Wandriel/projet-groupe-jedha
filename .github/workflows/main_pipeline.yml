@@ -1,7 +1,8 @@
 name: Pipeline Accidents Data Engineering
 
 on:
-  # 1. Déclenchement Manuel (Le bouton "Run workflow" dans GitHub)
+  push:
+    branches: [ dev-Baptiste ]  # <--- Ajoute ça pour que ça se lance au push sur dev
   workflow_dispatch:
 
   # 2. Déclenchement une fois par an (le 1er janvier à minuit)
@@ -23,7 +24,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: "eu-west-3"
+          AWS_REGION: "eu-north-1"
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -32,7 +33,7 @@ jobs:
         run: |
           docker run --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
                      --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-                     --env AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION \
+                     --env AWS_REGION=$AWS_REGION \
                      --env DB_USER=$DB_USER \
                      --env DB_PASSWORD=$DB_PASSWORD \
                      --env DB_HOST=$DB_HOST \
