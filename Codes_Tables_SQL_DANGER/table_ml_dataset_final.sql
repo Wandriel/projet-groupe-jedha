@@ -3,20 +3,27 @@
 --  Clé principale : Num_Acc (accident) + id_usager (victime)
 -- ============================================================
 
-CREATE TABLE public.ml_dataset_final AS
+-- ============================================================
+--  TABLE ULTIME ML — Matérialisation physique pour performance
+--  Clé principale : Num_Acc (accident) + id_usager (victime)
+-- ============================================================
 
+-- 2. Création de la table physique (Materialisation)
+DROP TABLE IF EXISTS public.ml_dataset_final CASCADE;
+CREATE TABLE public.ml_dataset_final AS
 SELECT
     -- ── IDENTIFIANTS ────────────────────────────────────────
     u."Num_Acc",
     u.id_usager,
     u.id_vehicule,
     -- ── CIBLE ML ────────────────────────────────────────────
-    u.gravite,                          -- valeur brute (1/2/3/4)
-    u.graviter_blessure_label,          -- label lisible
+    u.gravite,                          
+    u.graviter_blessure_label,          
     CASE
         WHEN u.gravite = 2 THEN 1
         ELSE 0
-    END AS gravite_binaire,             -- ← variable cible binaire
+    END AS gravite_binaire,             -- ← variable cible binaire (Mort)
+
     -- ── USAGER ──────────────────────────────────────────────
     u.sexe,
     u.sexe_label,
@@ -84,27 +91,20 @@ SELECT
     l.vitesse_max_autorisee
 
 FROM public.view_usager u
-
--- Véhicule impliqué
 LEFT JOIN public.view_vehicules v
     ON  v."Num_Acc"    = u."Num_Acc"
     AND v.id_vehicule  = u.id_vehicule
     AND v.annee_source = u.annee_source
-
--- Caractéristiques de l'accident (avec vacances)
 LEFT JOIN public.view_caract c
     ON  c."Num_Acc"    = u."Num_Acc"
     AND c.annee_source = u.annee_source
-
--- Lieux / infrastructure
 LEFT JOIN public.view_lieux l
     ON  l."Num_Acc"    = u."Num_Acc"
     AND l.annee_source = u.annee_source
-
 ORDER BY u."Num_Acc", u.id_usager;
 
+-- 3. Ajout des Index pour booster les performances de lecture Python
 CREATE INDEX idx_ml_num_acc    ON public.ml_dataset_final ("Num_Acc");
 CREATE INDEX idx_ml_gravite    ON public.ml_dataset_final (gravite_binaire);
 CREATE INDEX idx_ml_annee      ON public.ml_dataset_final (annee_source);
 CREATE INDEX idx_ml_vacances   ON public.ml_dataset_final (vacances_scolaires_flag);
-                   

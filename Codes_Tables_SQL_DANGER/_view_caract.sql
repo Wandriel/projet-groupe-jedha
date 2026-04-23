@@ -1,3 +1,4 @@
+CREATE OR REPLACE VIEW public.view_caract AS
 with
 dim_vac_ameliore as (SELECT region, date
 					FROM (SELECT v.date,
@@ -89,10 +90,16 @@ temp_caract as (SELECT r."Num_Acc",
 					     LEFT JOIN ref_departements t ON t.code::text = lpad(r.departement, 2, '0'::text))
 
 
-CREATE OR REPLACE VIEW public.view_caract
- AS
+
 SELECT v.*, 
-		d.date as vacances_scolaires
+		CASE 
+	        WHEN d.date IS NOT NULL THEN 'Vacances scolaires' 
+	        ELSE 'hors vacances scolaires' 
+	    END AS vacances_scolaires,
+	    CASE 
+	        WHEN d.date IS NOT NULL THEN 1 
+	        ELSE 0 
+	    END AS vacances_scolaires_flag
 FROM temp_caract v
 
 LEFT JOIN dim_vac_ameliore d

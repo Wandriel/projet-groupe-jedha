@@ -39,7 +39,7 @@ fichiers_a_pousser = {
     'silver/usagers_cleaned.csv': 'dim_usagers',
     'silver/vehicules_cleaned.csv': 'dim_vehicules',
     'silver/lieux_cleaned.csv': 'fact_lieux',
-    'silver/referentiel_vacances.csv': 'dim_vacances'
+    'silver/referentiel_vacances.csv': 'dim_vac_scolaire'
 }
 
 def executer_scripts_sql(engine, dossier_sql="Codes_Tables_SQL_DANGER"):
@@ -79,7 +79,7 @@ def run_pipeline():
                     with engine.begin() as conn:
                         conn.execute(text(f'TRUNCATE TABLE "{table_name}" CASCADE;'))
                     
-                    df.to_sql(table_name, engine, if_exists='append', index=False, method='multi', chunksize=10000)
+                    df.to_sql(table_name, engine, if_exists='append', index=False, method='multi', chunksize=1000)
                     print(f"✅ Succès : Mise à jour en mode APPEND.")
 
                 except Exception as e_append:
@@ -92,14 +92,14 @@ def run_pipeline():
                         conn.execute(text(f'DROP TABLE IF EXISTS "{table_name}" CASCADE;'))
                     
                     # 4. On recrée la table avec la nouvelle structure
-                    df.to_sql(table_name, engine, if_exists='replace', index=False, method='multi', chunksize=10000)
+                    df.to_sql(table_name, engine, if_exists='replace', index=False, method='multi', chunksize=1000)
                     print(f"✅ Succès : Table {table_name} recréée proprement.")
 
             except Exception as e:
                 print(f"❌ Erreur sur {table_name} : {e}")
                 continue 
 
-        # --- PHASE FINALE : RECRÉATION AUTOMATIQUE DES VUES ---
+        # # --- PHASE FINALE : RECRÉATION AUTOMATIQUE DES VUES ---
         print("\n--- 🏗️ Reconstruction des Vues SQL ---")
         executer_scripts_sql(engine)
 
