@@ -89,7 +89,8 @@ temp_caract as (SELECT r."Num_Acc",
 					     LEFT JOIN ref_departements t ON t.code::text = lpad(r.departement, 2, '0'::text))
 
 
-
+CREATE OR REPLACE VIEW public.view_caract
+ AS
 SELECT v.*, 
 		d.date as vacances_scolaires
 FROM temp_caract v

@@ -1,3 +1,5 @@
+ CREATE OR REPLACE VIEW public.view_vehicules
+ AS
  SELECT "Num_Acc",
     id_vehicule,
     categorie_vehicule,

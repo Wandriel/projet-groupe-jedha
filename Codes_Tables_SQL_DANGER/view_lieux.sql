@@ -1,3 +1,5 @@
+ CREATE OR REPLACE VIEW public.view_lieux
+ AS
  SELECT "Num_Acc",
     categorie_route,
     regime_circulation,

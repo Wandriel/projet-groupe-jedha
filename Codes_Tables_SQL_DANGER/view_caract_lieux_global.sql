@@ -1,3 +1,5 @@
+CREATE OR REPLACE VIEW public.view_caract_lieux
+ AS
  SELECT r."Num_Acc",
     r.luminosite,
     r.departement,

@@ -1,3 +1,5 @@
+ CREATE OR REPLACE VIEW public.view_usager
+ AS
  SELECT r."Num_Acc",
     r.id_usager,
     r.id_vehicule,
