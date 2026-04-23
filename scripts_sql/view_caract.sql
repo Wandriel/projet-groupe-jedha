@@ -1,9 +1,3 @@
--- View: public.view_caract
-
--- DROP VIEW public.view_caract;
-
-CREATE OR REPLACE VIEW public.view_caract
- AS
  SELECT r."Num_Acc",
     r.luminosite,
     r.departement,
@@ -17,6 +11,22 @@ CREATE OR REPLACE VIEW public.view_caract
     r.date,
     r.annee_source,
     t.nom_total AS label_departement,
+    t.region AS label_region,
+        CASE
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 0::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 1::numeric THEN '00h - 02h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 2::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 3::numeric THEN '02h - 04h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 4::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 5::numeric THEN '04h - 06h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 6::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 7::numeric THEN '06h - 08h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 8::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 9::numeric THEN '08h - 10h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 10::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 11::numeric THEN '10h - 12h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 12::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 13::numeric THEN '12h - 14h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 14::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 15::numeric THEN '14h - 16h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 16::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 17::numeric THEN '16h - 18h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 18::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 19::numeric THEN '18h - 20h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 20::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 21::numeric THEN '20h - 22h'::text
+            WHEN EXTRACT(hour FROM r.date::timestamp without time zone) >= 22::numeric AND EXTRACT(hour FROM r.date::timestamp without time zone) <= 23::numeric THEN '22h - 00h'::text
+            ELSE 'Non renseigné'::text
+        END AS tranche_horaire_label,
         CASE r.luminosite
             WHEN 1 THEN 'Plein jour'::text
             WHEN 2 THEN 'Crépuscule ou aube'::text

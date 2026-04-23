@@ -1,9 +1,3 @@
--- View: public.view_vehicules
-
--- DROP VIEW public.view_vehicules;
-
-CREATE OR REPLACE VIEW public.view_vehicules
- AS
  SELECT "Num_Acc",
     id_vehicule,
     categorie_vehicule,
@@ -68,4 +62,3 @@ CREATE OR REPLACE VIEW public.view_vehicules
             ELSE 'Non renseigné'::text
         END AS motorisation_label
    FROM dim_vehicules r;
-

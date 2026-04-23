@@ -1,9 +1,3 @@
--- View: public.view_usager
-
--- DROP VIEW public.view_usager;
-
-CREATE OR REPLACE VIEW public.view_usager
- AS
  SELECT r."Num_Acc",
     r.id_usager,
     r.id_vehicule,
@@ -122,5 +116,3 @@ CREATE OR REPLACE VIEW public.view_usager
         END AS tranche_age
    FROM dim_usagers r
      LEFT JOIN fact_caracteristiques f ON r."Num_Acc" = f."Num_Acc";
-
-

@@ -1,9 +1,3 @@
--- View: public.view_lieux
-
--- DROP VIEW public.view_lieux;
-
-CREATE OR REPLACE VIEW public.view_lieux
- AS
  SELECT "Num_Acc",
     categorie_route,
     regime_circulation,
@@ -48,4 +42,3 @@ CREATE OR REPLACE VIEW public.view_lieux
             ELSE 'Autre'::text
         END AS infrastucture_label
    FROM fact_lieux;
-
