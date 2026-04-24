@@ -7,17 +7,19 @@
     obstacle_mobile,
     motorisation,
     annee_source,
-        CASE
-            WHEN categorie_vehicule = ANY (ARRAY['1'::double precision, '50'::double precision, '60'::double precision, '80'::double precision]) THEN 'Mobilité douce (Vélos, EDP)'::text
-            WHEN categorie_vehicule = ANY (ARRAY['2'::double precision, '30'::double precision, '31'::double precision, '32'::double precision, '33'::double precision, '34'::double precision, '41'::double precision, '42'::double precision, '43'::double precision]) THEN 'Motos'::text
-            WHEN categorie_vehicule = ANY (ARRAY['3'::double precision, '7'::double precision]) THEN 'Véhicules Légers (VL)'::text
-            WHEN categorie_vehicule = '10'::double precision THEN 'Véhicules Utilitaires (VU)'::text
-            WHEN categorie_vehicule = ANY (ARRAY['13'::double precision, '14'::double precision, '15'::double precision, '16'::double precision, '17'::double precision]) THEN 'Poids Lourds (PL)'::text
-            WHEN categorie_vehicule = ANY (ARRAY['37'::double precision, '38'::double precision, '39'::double precision, '40'::double precision]) THEN 'Transports en commun'::text
-            WHEN categorie_vehicule = ANY (ARRAY['20'::double precision, '21'::double precision, '35'::double precision, '36'::double precision]) THEN 'Engins spéciaux, agricoles et Quads'::text
-            WHEN categorie_vehicule = ANY (ARRAY['0'::double precision, '99'::double precision]) THEN 'Inconnu ou Autre'::text
-            WHEN categorie_vehicule = ANY (ARRAY['4'::double precision, '5'::double precision, '6'::double precision, '8'::double precision, '9'::double precision, '11'::double precision, '12'::double precision, '18'::double precision, '19'::double precision]) THEN 'Référence obsolète'::text
-            ELSE 'Non renseigné'::text
+        CASE 
+            WHEN categorie_vehicule = 36::double precision THEN 'Quad lourd (>50cc)'::text
+            WHEN categorie_vehicule = ANY (ARRAY[33::double precision, 34::double precision]) THEN 'Moto >125cc'::text
+            WHEN categorie_vehicule = ANY (ARRAY[2::double precision, 30::double precision, 31::double precision, 32::double precision]) THEN 'Cyclomoteur <50cc'::text
+            WHEN categorie_vehicule = 1::double precision THEN 'Bicyclette'::text
+            WHEN categorie_vehicule = ANY (ARRAY[3::double precision, 7::double precision]) THEN 'Voiture légère (VL)'::text
+            WHEN categorie_vehicule = 10::double precision THEN 'Véhicules Utilitaires (VU)'::text
+            WHEN categorie_vehicule = ANY (ARRAY[13, 14, 15, 16, 17]) THEN 'Poids Lourds (PL)'::text
+            WHEN categorie_vehicule = ANY (ARRAY[37, 38, 39, 40]) THEN 'Transports en commun'::text
+            WHEN categorie_vehicule = ANY (ARRAY[50, 60, 80]) THEN 'Autres Mobilités (EDP)'::text
+            WHEN categorie_vehicule = ANY (ARRAY[20, 21, 35]) THEN 'Engins spéciaux et agricoles'::text
+            WHEN categorie_vehicule = ANY (ARRAY[0, 99]) THEN 'Inconnu ou Autre'::text
+            ELSE 'Autres/Non renseigné'::text
         END AS categorie_vehicule_label,
         CASE obstacle_fixe
             WHEN 0 THEN 'Sans objet'::text
