@@ -79,7 +79,7 @@ def run_pipeline():
                     with engine.begin() as conn:
                         conn.execute(text(f'TRUNCATE TABLE "{table_name}" CASCADE;'))
                     
-                    df.to_sql(table_name, engine, if_exists='append', index=False, method='multi', chunksize=1000)
+                    df.to_sql(table_name, engine, if_exists='append', index=False, method='multi', chunksize=6000)
                     print(f"✅ Succès : Mise à jour en mode APPEND.")
 
                 except Exception as e_append:
@@ -92,7 +92,7 @@ def run_pipeline():
                         conn.execute(text(f'DROP TABLE IF EXISTS "{table_name}" CASCADE;'))
                     
                     # 4. On recrée la table avec la nouvelle structure
-                    df.to_sql(table_name, engine, if_exists='replace', index=False, method='multi', chunksize=1000)
+                    df.to_sql(table_name, engine, if_exists='replace', index=False, method='multi', chunksize=6000)
                     print(f"✅ Succès : Table {table_name} recréée proprement.")
 
             except Exception as e:
