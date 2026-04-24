@@ -28,8 +28,8 @@
             ELSE 'Inconnu'::text
         END AS graviter_blessure_label,
         CASE r.sexe
-            WHEN 1 THEN 'Masculin'::text
-            WHEN 2 THEN 'Feminin'::text
+            WHEN 1 THEN 'Homme'::text
+            WHEN 2 THEN 'Femme'::text
             ELSE 'Inconnu'::text
         END AS sexe_label,
         CASE r.motif_trajet
