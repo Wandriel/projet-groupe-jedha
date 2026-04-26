@@ -9,11 +9,11 @@ Pipeline ETL production-grade. Données brutes (BAAC + calendrier scolaire) → 
 ## 🏗️ Architecture
 
 ```
-Bronze (brut)     Silver (nettoyé)   Gold (joiné)       RDS (enrichi)
-───────────────────────────────────────────────────────────────────
-4 tables          Nettoyage        Master merge        fact_ & dim_
-4 années       +  Renommage    +   Left join       +  SQL vues
-16 fichiers       Sentinelles      Dédupliq.          Power BI
+Bronze (brut)     Silver (nettoyé)   Gold (joiné)       
+────────────────────────────────────────────────────
+4 tables          Nettoyage         fact_ & dim_       
+4 années       +  Renommage    +    SQL vues       
+16 fichiers       Sentinelles       Power BI       
 ```
 
 **Données** : 500k usagers, 750k véhicules, 35k jours vacances  
