@@ -45,10 +45,8 @@ AWS S3 SILVER
 [script_connexion_RDS.py]
   Chargement PostgreSQL
   + reconstruction des vues SQL
-      │
-      ▼
-AWS RDS (PostgreSQL)       →  Power BI
-                           →  Module ML (post-formation)
+                          →  Power BI
+                          →  Module ML (post-formation)
 ```
 
 | Couche | Contenu |
@@ -179,8 +177,10 @@ Le dossier `Codes_Tables_SQL_DANGER/` contient les vues reconstruites automatiqu
 
 | Vue | Objectif |
 |-----|----------|
-| `view_caract` | Labels lisibles (météo, luminosité, intersection, type de collision), tranche horaire, jointure vacances scolaires par région |
-| Autres vues | Gravité des accidents par zone géographique, profilage des usagers impliqués |
+| `view_caract`   | Labels lisibles (météo, luminosité, intersection, type de collision), tranche horaire, jointure vacances scolaires par région |
+| `view_lieux`    | Labels lisibles (état du sol, infrastructure, catégorie de route)                                                             |
+| `view_vehicule` | Labels lisibles (catégorie de véhicule, obstacle fixe, obstacle mobile, motorisation)                                         |
+| `view_usagers`  | Labels lisibles (catégorie usager, gravité blessure, equipement de sécurité, age victime, tranche âge, localisation pieton...)|
 
 Connexion Power BI : `PostgreSQL → ton-endpoint.rds.amazonaws.com → securite_routiere `
 
