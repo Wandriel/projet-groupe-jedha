@@ -1,4 +1,4 @@
-# Pipeline ETL — Analyse des Accidents de la Route (BAAC 2021–2024)
+# Pipeline ETL — Analyse des Accidents de la Route en France Métropolitaine (BAAC 2021–2024)
 
 Pipeline de données **End-to-End** automatisant l'extraction, le nettoyage et le chargement des données BAAC (Bulletin d'Analyse des Accidents Corporels) vers PostgreSQL, avec alimentation d'un rapport Power BI.
 
