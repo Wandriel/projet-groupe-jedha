@@ -4,45 +4,41 @@ from sklearn.preprocessing import LabelEncoder
 MAP_GRAVITE = {
     1: 0,  # Indemne       → non mortel
     2: 1,  # Tué           → MORTEL
-    3: 0,  # Blessé hospit → non mortel
+    3: 1,  # Blessé hospit → non mortel
     4: 0,  # Blessé léger  → non mortel
 }
 
 # ── Features catégorielles (texte → LabelEncoder) ─────────────────────────────
 FEATURES_CATEGORIQUES = [
-    # Usager
-    "categorie_usager_label",
-    "motif_trajet_label",
-    "equipement_secu_1_label",
-    "equipement_secu_2_label",
-    "equipement_secu_3_label",
-    "tranche_age",
-    "sexe",
-    # Véhicule
+    "type_collision_label",
     "categorie_vehicule_label",
     "motorisation_label",
-    "obstacle_fixe_label",
-    "obstacle_mobile_label",
-    # Accident / conditions
-    "luminosite_label",        # ← une seule fois
-    "agglomeration_label",     # ← une seule fois
+    "equipement_secu_1_label",
+    "categorie_usager_label",
+    "motif_trajet_label",
+    "tranche_age",
+    "agglomeration_label",
     "intersection_label",
+    "luminosite_label",
     "meteo_label",
-    "type_collision_label",
-    "tranche_horaire_label",   # ← texte donc ICI, pas dans NUM
-    # Lieu
     "categorie_route_label",
     "etat_surface_label",
-    "infrastucture_label"
+    "infrastucture_label",
+    "tranche_horaire_label",
+    "obstacle_mobile_label",
+    "obstacle_fixe_label",
+    "sexe",                    # ← catégoriel maintenant
 ]
 
-# ── Features numériques (déjà des nombres) ────────────────────────────────────
 FEATURES_NUMERIQUES = [
-    "vacances_scolaires_flag",   # 0/1                     # 1/2
-    "vitesse_max_autorisee",     # nombre entier
-    # "annee_source",            # supprimé : non prédictif
+    "vacances_scolaires_flag",
+    "vitesse_max_autorisee",
+    "profil_risque",
+    "route_dangereuse",
+    "visibilite_degradee",
+    "heure_nuit",
+    "vehicule_vulnerable",
 ]
-
 
 def prepare_features(df: pd.DataFrame):
     df = df.copy()
