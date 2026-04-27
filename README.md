@@ -10,12 +10,13 @@ Pipeline de données **End-to-End** automatisant l'extraction, le nettoyage et l
 - Traiter des données réelles imparfaites (valeurs sentinelles, incohérences inter-années, types erronés)
 - Enrichir les données de trafic avec des signaux externes (calendrier scolaire via API)
 - Préparer une table de faits unique pour des analyses avancées dans Power BI
+- Alimenter un modèle ML prédictif des pics de risque (axe post-formation)
 
 ---
 
 ## Sources de données
 
-- **BAAC** — Données annuelles des accidents corporels (data.gouv.fr, 2021–2024)
+- **BAAC** — Données annuelles des accidents corporels (data.gouv.fr, 2021–2024) — 4 datasets × 4 années = **16 fichiers**
 - **API Éducation Nationale** — Calendrier scolaire officiel (identification des périodes de vacances)
 - **AWS S3** — Stockage intermédiaire des couches Bronze et Silver
 
@@ -25,7 +26,7 @@ Pipeline de données **End-to-End** automatisant l'extraction, le nettoyage et l
 
 ```text
 AWS S3 BRONZE
-  (CSV bruts)
+  (CSV bruts — 16 fichiers)
       │
       ▼
 [main.py + cleaning_functions.py]
@@ -46,8 +47,8 @@ AWS S3 SILVER
   + reconstruction des vues SQL
       │
       ▼
-AWS RDS (PostgreSQL)
-  → Power BI DirectQuery
+AWS RDS (PostgreSQL)       →  Power BI DirectQuery
+                           →  Module ML (post-formation)
 ```
 
 | Couche | Contenu |
@@ -56,6 +57,8 @@ AWS RDS (PostgreSQL)
 | **Silver** | Données nettoyées, typées, enrichies (lat/long, dates, colonne `annee`) |
 | **Gold** | Table de faits `fact_accidents` — jointure sur `Num_Acc` / `id_vehicule` |
 | **Serving** | Vues SQL analytiques dans RDS, consommées par Power BI en DirectQuery |
+
+> **Performances :** run complet en ~2min45 (Bronze → Gold) / ~3min10 (Gold → RDS + vues SQL)
 
 ---
 
@@ -166,6 +169,7 @@ Ce script unique enchaîne automatiquement :
 - **SQLAlchemy / psycopg2** — chargement PostgreSQL (AWS RDS)
 - **Requests** — API Éducation Nationale (vacances scolaires)
 - **Power BI** — rapport analytique final (connexion DirectQuery)
+- **Scikit-learn** *(post-formation)* — modèle ML prédictif des pics de risque
 
 ---
 
@@ -188,6 +192,26 @@ Connexion Power BI : `PostgreSQL → ton-endpoint.rds.amazonaws.com → securite
 - Détection des `NaN` par colonne et par année
 - Réconciliation Bronze vs Silver (garantit qu'aucune ligne n'est perdue durant le traitement)
 - Vérification de l'absence de doublons sur les clés `(Num_Acc, id_usager)`
+
+---
+
+## Pistes d'évolution
+
+**Intégration de données supplémentaires**
+- Facteurs comportementaux : alcoolémie, fatigue, inattention
+- Facteurs légaux : vétusté du véhicule, validité du permis, solde de points
+
+**Corrélation avec les dispositifs de contrôle**
+- Croiser la cartographie des zones accidentogènes avec l'implantation des radars
+- Croiser avec les données de verbalisation (ceinture, vitesse)
+
+**Évaluation de la limitation à 80 km/h**
+- Analyse rétrospective de l'impact du passage aux 80 km/h sur les routes départementales depuis 2018
+- Mesurer si la baisse de vitesse a infléchi la courbe de gravité sur le long terme
+
+**Optimisation ML**
+- Amélioration des performances du modèle de prédiction de gravité
+- Modèle prédictif des pics de risque selon la météo et le calendrier scolaire
 
 ---
 
