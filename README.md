@@ -47,7 +47,7 @@ AWS S3 SILVER
   + reconstruction des vues SQL
       │
       ▼
-AWS RDS (PostgreSQL)       →  Power BI DirectQuery
+AWS RDS (PostgreSQL)       →  Power BI
                            →  Module ML (post-formation)
 ```
 
@@ -56,7 +56,7 @@ AWS RDS (PostgreSQL)       →  Power BI DirectQuery
 | **Bronze** | CSV bruts BAAC par année (usagers, caractéristiques, lieux, véhicules) |
 | **Silver** | Données nettoyées, typées, enrichies (lat/long, dates, colonne `annee`) |
 | **Gold** | Table de faits `fact_accidents` — jointure sur `Num_Acc` / `id_vehicule` |
-| **Serving** | Vues SQL analytiques dans RDS, consommées par Power BI en DirectQuery |
+| **Serving** | Vues SQL analytiques dans RDS, consommées par Power BI |
 
 > **Performances :** run complet en ~2min45 (Bronze → Gold) / ~3min10 (Gold → RDS + vues SQL)
 
@@ -168,7 +168,7 @@ Ce script unique enchaîne automatiquement :
 - **boto3** — interactions AWS S3
 - **SQLAlchemy / psycopg2** — chargement PostgreSQL (AWS RDS)
 - **Requests** — API Éducation Nationale (vacances scolaires)
-- **Power BI** — rapport analytique final (connexion DirectQuery)
+- **Power BI** — rapport analytique final (connexion ODBC suite à des problèmes SSL entre AWS et Microsoft)
 - **Scikit-learn** *(post-formation)* — modèle ML prédictif des pics de risque
 
 ---
@@ -182,7 +182,7 @@ Le dossier `Codes_Tables_SQL_DANGER/` contient les vues reconstruites automatiqu
 | `view_caract` | Labels lisibles (météo, luminosité, intersection, type de collision), tranche horaire, jointure vacances scolaires par région |
 | Autres vues | Gravité des accidents par zone géographique, profilage des usagers impliqués |
 
-Connexion Power BI : `PostgreSQL → ton-endpoint.rds.amazonaws.com → securite_routiere → DirectQuery`
+Connexion Power BI : `PostgreSQL → ton-endpoint.rds.amazonaws.com → securite_routiere `
 
 ---
 
@@ -215,4 +215,4 @@ Connexion Power BI : `PostgreSQL → ton-endpoint.rds.amazonaws.com → securite
 
 ---
 
-*Projet réalisé dans le cadre de la certification Data Engineer — 2026*
+*Projet réalisé dans le cadre de la certification Analytic Engineer — 2026*
