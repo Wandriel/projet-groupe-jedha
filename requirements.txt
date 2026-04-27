@@ -1,7 +1,8 @@
 pandas
 numpy
-boto3
+boto3>=1.28.0
 requests
 python-dotenv
 sqlalchemy
-psycopg2-binary
+pg8000
+urllib3>=2.0.0
