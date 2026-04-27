@@ -59,16 +59,15 @@ DB_HOST=votre_instance_endpoint
 DB_NAME=postgres
 DB_PORT=5432
 
-### Partie 3 : Utilisation et Analyse
+## Partie 3 : Utilisation et Analyse
 
----
-
+```markdown
 ## 🚀 Utilisation
 Pour lancer l'intégralité du pipeline (de l'extraction S3 jusqu'à la mise à jour des vues SQL dans RDS), exécutez simplement :
 
 ```bash
 python run_all_py.py
-
+```  
 ### Détails du processus automatique :
 
 * **Nettoyage** des 4 tables BAAC pour chaque année (2021-2024).
@@ -88,4 +87,4 @@ Le dossier `Codes_Tables_SQL_DANGER` contient des vues optimisées pour :
 * Le **profilage des usagers** impliqués.
 
 ---
-*Projet réalisé dans le cadre de la certification Data Engineer.*
+*Projet réalisé dans le cadre de la certification Data Analysis.*
