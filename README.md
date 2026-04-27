@@ -60,7 +60,7 @@ DB_NAME=postgres
 DB_PORT=5432
 
 ### Partie 3 : Utilisation et Analyse
-```markdown
+
 ---
 
 ## 🚀 Utilisation
