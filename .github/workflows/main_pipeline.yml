@@ -2,12 +2,12 @@ name: Pipeline Accidents Data Engineering
 
 on:
   push:
-    branches: [ dev-Baptiste ]  # <--- Ajoute ça pour que ça se lance au push sur dev
+    branches: [ main ]  # <--- Ajoute ça pour que ça se lance au push sur dev
   workflow_dispatch:
 
-  # 2. Déclenchement une fois par an (le 1er janvier à minuit)
+  # 2. Déclenchement le 1er de chaque mois à minuit
   schedule:
-    - cron: '0 0 1 1 *'
+    - - cron: '0 0 1 * *'
 
 jobs:
   build-and-run:
