@@ -6,3 +6,4 @@ python-dotenv
 sqlalchemy
 pg8000
 urllib3>=2.0.0
+aiohttp
