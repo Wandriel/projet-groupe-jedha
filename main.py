@@ -39,7 +39,7 @@ def detect_annee(filepath):
         if str(annee) in filepath:
             return annee
     return None
-
+#
 
 def process_and_upload_silver(all_files, keyword, cleaning_func, silver_name):
     dfs = []
