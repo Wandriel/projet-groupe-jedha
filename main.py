@@ -2,6 +2,7 @@ import pandas as pd
 from s3_utils import read_s3_csv, upload_to_s3, get_s3_client
 import cleaning_functions as cf
 from vacances_api import fetch_vacances_data
+import os
 
 # ══════════════════════════════════════════════════════════════════════════════
 # main.py — Version corrigée et synchronisée avec cleaning_functions_v2.py
@@ -17,7 +18,7 @@ from vacances_api import fetch_vacances_data
 # 6. Vérification du nombre de lignes attendu (506 886 ± tolérance)
 # ══════════════════════════════════════════════════════════════════════════════
 
-BUCKET = "projet-accidents-jedha"
+BUCKET = os.getenv("BUCKET_NAME", "projet-accidents-jedha")
 
 ANNEES = [2021, 2022, 2023, 2024]
 
@@ -41,22 +42,19 @@ def detect_annee(filepath):
 
 
 def process_and_upload_silver(all_files, keyword, cleaning_func, silver_name):
-    """
-    Lit les fichiers bruts depuis S3 bronze/, applique le nettoyage,
-    concatene les 4 années et uploade le résultat dans silver/.
-    """
     dfs = []
     print(f"\n⏳ Préparation Silver : {silver_name}...")
 
     for f in all_files:
         if keyword in f.lower():
 
-            # ── Détection séparateur selon l'année ──────────────────────────
-            # 2024 utilise la virgule, les autres le point-virgule
-            sep = ',' if '2024' in f else ';'
+            # Ignorer les fichiers immatriculation (structure différente)
+            if 'immatricul' in f.lower():
+                print(f"   ⏭️  Ignoré (immatriculation) : {f}")
+                continue
 
-            # ── Détection de l'année depuis le nom du fichier ────────────────
-            # CORRECTION : on passe l'année à la fonction de nettoyage
+            sep = ';'
+
             annee = detect_annee(f)
             if annee is None:
                 print(f"   ⚠️  Impossible de détecter l'année pour {f} — fichier ignoré")
@@ -65,7 +63,6 @@ def process_and_upload_silver(all_files, keyword, cleaning_func, silver_name):
             print(f"   -> Lecture {f} (année={annee}, sep='{sep}')")
             df_raw = read_s3_csv(f, separator=sep)
 
-            # CORRECTION : on passe maintenant l'année en paramètre
             df_clean = cleaning_func(df_raw, annee)
             dfs.append(df_clean)
 
@@ -74,7 +71,6 @@ def process_and_upload_silver(all_files, keyword, cleaning_func, silver_name):
         return pd.DataFrame()
 
     df_silver = pd.concat(dfs, ignore_index=True)
-
     upload_to_s3(df_silver, f"{silver_name}.csv", folder="silver")
     print(f"✅ Silver '{silver_name}' uploadé — {len(df_silver):,} lignes x {df_silver.shape[1]} colonnes")
 
@@ -83,7 +79,7 @@ def process_and_upload_silver(all_files, keyword, cleaning_func, silver_name):
 
 def main():
     s3 = get_s3_client()
-    all_files = get_all_files(s3, BUCKET, 'bronze/')
+    all_files = get_all_files(s3, BUCKET, 'bronze/BAAC/')
     print(f"📂 {len(all_files)} fichiers CSV trouvés dans bronze/")
 
     # ── ÉTAPE 0 : PIPELINE VACANCES (API -> SILVER) ─────────────────────────
@@ -117,7 +113,7 @@ def main():
             return
 
     # ── ÉTAPE 2 : GOLD — jointure dans le bon ordre ─────────────────────────
-    print("\n🔗 Création de la table Gold V2 (Master Merge)...")
+    #print("\n🔗 Création de la table Gold V2 (Master Merge)...")
 
     # CORRECTION : ordre des jointures aligné sur alex_jointure.ipynb
     # BASE : usagers (1 ligne = 1 usager) — on ne perd aucune ligne (left join)

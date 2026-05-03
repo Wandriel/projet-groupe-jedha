@@ -18,10 +18,14 @@ def run_script(script_name):
 if __name__ == "__main__":
     print("🚀 DÉMARRAGE DU PIPELINE COMPLET (END-TO-END)")
     
-    # ÉTAPE 1 : Transformations et S3 (Ton main.py actuel)
+    #etape 1 : importation des CSV sur S3 via bronze_downloader.py
+
+    run_script("bronze_downloader.py")
+    
+    # ÉTAPE 2 : Transformations et S3 (Ton main.py actuel)
     run_script("main.py")
     
-    # ÉTAPE 2 : Envoi vers RDS (Ton nouveau script d'automatisation)
+    # ÉTAPE 3 : Envoi vers RDS (Ton nouveau script d'automatisation)
     run_script("script_connexion_RDS.py")
     
     print("\n✨ TOUT EST À JOUR : S3 est propre et RDS est rempli !")
