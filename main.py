@@ -53,7 +53,7 @@ def process_and_upload_silver(all_files, keyword, cleaning_func, silver_name):
 
             # ── Détection séparateur selon l'année ──────────────────────────
             # 2024 utilise la virgule, les autres le point-virgule
-            sep = ',' if '2024' in f else ';'
+            sep = ';'
 
             # ── Détection de l'année depuis le nom du fichier ────────────────
             # CORRECTION : on passe l'année à la fonction de nettoyage
