@@ -51,6 +51,10 @@ def process_and_upload_silver(all_files, keyword, cleaning_func, silver_name):
     for f in all_files:
         if keyword in f.lower():
 
+            if 'immatricul' in f.lower():
+            print(f"   ⏭️  Ignoré (immatriculation) : {f}")
+            continue
+
             # ── Détection séparateur selon l'année ──────────────────────────
             # 2024 utilise la virgule, les autres le point-virgule
             sep = ';'
@@ -83,7 +87,7 @@ def process_and_upload_silver(all_files, keyword, cleaning_func, silver_name):
 
 def main():
     s3 = get_s3_client()
-    all_files = get_all_files(s3, BUCKET, 'bronze/')
+    all_files = get_all_files(s3, BUCKET, 'bronze/BAAC/')
     print(f"📂 {len(all_files)} fichiers CSV trouvés dans bronze/")
 
     # ── ÉTAPE 0 : PIPELINE VACANCES (API -> SILVER) ─────────────────────────
