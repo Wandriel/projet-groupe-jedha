@@ -52,8 +52,8 @@ def process_and_upload_silver(all_files, keyword, cleaning_func, silver_name):
         if keyword in f.lower():
 
             if 'immatricul' in f.lower():
-            print(f"   ⏭️  Ignoré (immatriculation) : {f}")
-            continue
+                print(f"   ⏭️  Ignoré (immatriculation) : {f}")
+                continue
 
             # ── Détection séparateur selon l'année ──────────────────────────
             # 2024 utilise la virgule, les autres le point-virgule
